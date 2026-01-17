@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const clienteSelect = document.querySelector('#cliente_id');
+    const enderecoSelect = document.querySelector('#endereco_cliente_id');
+
+    function loadEnderecos(clienteId) {
+        if (clienteId) {
+            fetch(`/cliente/${clienteId}/enderecos`)
+                .then(response => response.json())
+                .then(data => {
+                    enderecoSelect.innerHTML = '<option value="">Selecione um endereço</option>';
+                    data.forEach(endereco => {
+                        const option = document.createElement('option');
+                        option.value = endereco.id;
+                        option.textContent = endereco.text;
+                        enderecoSelect.appendChild(option);
+                    });
+                })
+                .catch(error => {
+                    console.error('Erro ao carregar endereços:', error);
+                    enderecoSelect.innerHTML = '<option value="">Erro ao carregar endereços</option>';
+                });
+        } else {
+            enderecoSelect.innerHTML = '<option value="">Selecione um cliente primeiro</option>';
+        }
+    }
+
+    // Carregar endereços do cliente inicialmente selecionado
+    if (clienteSelect.value) {
+        loadEnderecos(clienteSelect.value);
+    }
+
+    clienteSelect.addEventListener('change', function() {
+        loadEnderecos(this.value);
+    });
+});
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h3>{{ titulo }}</h3>
+            </div>
+            <div class="card-body">
+                {% for field, errors in form.errors.items() %}
+                    {% for error in errors %}
+                        <div class="alert alert-danger">{{ error }}</div>
+                    {% endfor %}
+                {% endfor %}
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+                    <div class="mb-3">
+                        {{ form.cliente_id.label(class="form-label") }}
+                        {{ form.cliente_id(class="form-select") }}
+                        {% if form.cliente_id.errors %}
+                            <div class="text-danger">
+                                {% for error in form.cliente_id.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.endereco_cliente_id.label(class="form-label") }}
+                        {{ form.endereco_cliente_id(class="form-select") }}
+                        {% if form.endereco_cliente_id.errors %}
+                            <div class="text-danger">
+                                {% for error in form.endereco_cliente_id.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            {{ form.data_orcamento.label(class="form-label") }}
+                            {{ form.data_orcamento(class="form-control") }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            {{ form.data_validade.label(class="form-label") }}
+                            {{ form.data_validade(class="form-control") }}
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        {{ form.aprovado(class="form-check-input") }}
+                        {{ form.aprovado.label(class="form-check-label") }}
+                    </div>
+                    {{ form.submit(class="btn btn-primary") }}
+                    <a href="{{ url_for('main.orcamentos') }}" class="btn btn-secondary">Cancelar</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

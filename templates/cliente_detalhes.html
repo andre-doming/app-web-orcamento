@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Cliente: {{ cliente.nome }}</h1>
+    <div>
+        <a href="{{ url_for('main.cliente_editar', id=cliente.id) }}" class="btn btn-warning">Editar</a>
+        <a href="{{ url_for('main.cliente_deletar', id=cliente.id) }}" class="btn btn-danger" onclick="return confirm('Tem certeza?')">Deletar</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Informações Gerais</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Nome:</strong> {{ cliente.nome }}</p>
+                <p><strong>Observações:</strong> {{ cliente.observacoes or 'Nenhuma' }}</p>
+                <p><strong>Criado em:</strong> {{ cliente.criado_em.strftime('%d/%m/%Y %H:%M') }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5>Contatos</h5>
+                <a href="{{ url_for('main.contato_cliente_novo', cliente_id=cliente.id) }}" class="btn btn-sm btn-primary">Adicionar</a>
+            </div>
+            <div class="card-body">
+                {% if cliente.contatos %}
+                    <ul class="list-group">
+                        {% for contato in cliente.contatos %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ contato.tipo|title }}: {{ contato.valor }}
+                            {% if contato.principal %}
+                                <span class="badge bg-primary">Principal</span>
+                            {% endif %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>Nenhum contato cadastrado.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5>Endereços</h5>
+                <a href="{{ url_for('main.endereco_cliente_novo', cliente_id=cliente.id) }}" class="btn btn-sm btn-primary">Adicionar</a>
+            </div>
+            <div class="card-body">
+                {% if cliente.enderecos %}
+                    <div class="row">
+                        {% for endereco in cliente.enderecos %}
+                        <div class="col-md-6 mb-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <p>{{ endereco.logradouro }}, {{ endereco.numero }}</p>
+                                    <p>{{ endereco.bairro }}, {{ endereco.cidade }}/{{ endereco.estado }}</p>
+                                    <p>CEP: {{ endereco.cep }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p>Nenhum endereço cadastrado.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1>Bem-vindo ao {{ app_nome }}</h1>
+        <p>Sistema de gestão de orçamentos para {{ empresa_nome }}.</p>
+        <div class="row mt-4">
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Clientes</h5>
+                        <p class="card-text">Gerencie seus clientes e seus contatos.</p>
+                        <a href="{{ url_for('main.clientes') }}" class="btn btn-primary">Ver Clientes</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Itens</h5>
+                        <p class="card-text">Cadastre produtos e serviços.</p>
+                        <a href="{{ url_for('main.itens') }}" class="btn btn-primary">Ver Itens</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Orçamentos</h5>
+                        <p class="card-text">Crie e gerencie orçamentos.</p>
+                        <a href="{{ url_for('main.orcamentos') }}" class="btn btn-primary">Ver Orçamentos</a>
+                    </div>
+                </div>
+            </div>
+            {% if current_user.is_authenticated and current_user.email == 'admin@example.com' %}
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Usuários</h5>
+                        <p class="card-text">Gerencie usuários do sistema.</p>
+                        <a href="{{ url_for('main.usuarios') }}" class="btn btn-primary">Ver Usuários</a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Orçamentos</h1>
+    <a href="{{ url_for('main.orcamento_novo') }}" class="btn btn-primary">Novo Orçamento</a>
+</div>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Cliente</th>
+            <th>Data Orçamento</th>
+            <th>Data Validade</th>
+            <th>Valor Total</th>
+            <th>Status</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for orcamento in orcamentos %}
+        <tr>
+            <td>{{ orcamento.id }}</td>
+            <td>{{ orcamento.cliente.nome }}</td>
+            <td>{{ orcamento.data_orcamento.strftime('%d/%m/%Y') }}</td>
+            <td>{{ orcamento.data_validade.strftime('%d/%m/%Y') }}</td>
+            <td>R$ {{ "%.2f"|format(orcamento.valor_total) }}</td>
+            <td>
+                {% if orcamento.aprovado %}
+                    <span class="badge bg-success">Aprovado</span>
+                {% else %}
+                    <span class="badge bg-warning">Pendente</span>
+                {% endif %}
+            </td>
+            <td>
+                <a href="{{ url_for('main.orcamento_detalhes', id=orcamento.id) }}" class="btn btn-sm btn-info">Ver</a>
+                {% if not orcamento.aprovado %}
+                <a href="{{ url_for('main.orcamento_editar', id=orcamento.id) }}" class="btn btn-sm btn-warning">Editar</a>
+                <a href="{{ url_for('main.orcamento_deletar', id=orcamento.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza?')">Deletar</a>
+                {% endif %}
+                {% if not orcamento.aprovado %}
+                <a href="{{ url_for('main.orcamento_aprovar', id=orcamento.id) }}" class="btn btn-sm btn-success" onclick="return confirm('Aprovar orçamento?')">Aprovar</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
