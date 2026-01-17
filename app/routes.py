@@ -147,6 +147,31 @@ def contato_cliente_novo(cliente_id):
         return redirect(url_for('main.cliente_detalhes', id=cliente_id))
     return render_template('contato_form.html', form=form, cliente=cliente, titulo='Novo Contato', app_nome='OrçaWeb', empresa_nome='Sua Empresa', logo_url='')
 
+@bp.route('/contato/<int:id>/editar', methods=['GET', 'POST'])
+@login_required
+def contato_cliente_editar(id):
+    contato = ContatoCliente.query.get_or_404(id)
+    cliente = contato.cliente
+    form = ContatoClienteForm(obj=contato)
+    if form.validate_on_submit():
+        contato.tipo = form.tipo.data
+        contato.valor = form.valor.data
+        contato.principal = form.principal.data
+        db.session.commit()
+        flash('Contato atualizado.')
+        return redirect(url_for('main.cliente_detalhes', id=cliente.id))
+    return render_template('contato_form.html', form=form, cliente=cliente, titulo='Editar Contato', app_nome='OrçaWeb', empresa_nome='Sua Empresa', logo_url='')
+
+@bp.route('/contato/<int:id>/deletar')
+@login_required
+def contato_cliente_deletar(id):
+    contato = ContatoCliente.query.get_or_404(id)
+    cliente_id = contato.cliente_id
+    db.session.delete(contato)
+    db.session.commit()
+    flash('Contato deletado.')
+    return redirect(url_for('main.cliente_detalhes', id=cliente_id))
+
 # Enderecos do Cliente
 @bp.route('/cliente/<int:cliente_id>/endereco/novo', methods=['GET', 'POST'])
 @login_required
@@ -158,6 +183,7 @@ def endereco_cliente_novo(cliente_id):
             cliente_id=cliente_id,
             logradouro=form.logradouro.data,
             numero=form.numero.data,
+            complemento=form.complemento.data,
             bairro=form.bairro.data,
             cidade=form.cidade.data,
             estado=form.estado.data,
@@ -168,6 +194,35 @@ def endereco_cliente_novo(cliente_id):
         flash('Endereço adicionado.')
         return redirect(url_for('main.cliente_detalhes', id=cliente_id))
     return render_template('endereco_form.html', form=form, cliente=cliente, titulo='Novo Endereço', app_nome='OrçaWeb', empresa_nome='Sua Empresa', logo_url='')
+
+@bp.route('/endereco/<int:id>/editar', methods=['GET', 'POST'])
+@login_required
+def endereco_cliente_editar(id):
+    endereco = EnderecoCliente.query.get_or_404(id)
+    cliente = endereco.cliente
+    form = EnderecoClienteForm(obj=endereco)
+    if form.validate_on_submit():
+        endereco.logradouro = form.logradouro.data
+        endereco.numero = form.numero.data
+        endereco.complemento = form.complemento.data
+        endereco.bairro = form.bairro.data
+        endereco.cidade = form.cidade.data
+        endereco.estado = form.estado.data
+        endereco.cep = form.cep.data
+        db.session.commit()
+        flash('Endereço atualizado.')
+        return redirect(url_for('main.cliente_detalhes', id=cliente.id))
+    return render_template('endereco_form.html', form=form, cliente=cliente, titulo='Editar Endereço', app_nome='OrçaWeb', empresa_nome='Sua Empresa', logo_url='')
+
+@bp.route('/endereco/<int:id>/deletar')
+@login_required
+def endereco_cliente_deletar(id):
+    endereco = EnderecoCliente.query.get_or_404(id)
+    cliente_id = endereco.cliente_id
+    db.session.delete(endereco)
+    db.session.commit()
+    flash('Endereço deletado.')
+    return redirect(url_for('main.cliente_detalhes', id=cliente_id))
 
 # Itens CRUD
 @bp.route('/itens')
@@ -367,4 +422,4 @@ def orcamento_item_editar(item_id):
 @login_required
 def cliente_enderecos(cliente_id):
     enderecos = EnderecoCliente.query.filter_by(cliente_id=cliente_id).all()
-    return jsonify([{'id': e.id, 'text': f"{e.logradouro}, {e.numero} - {e.cidade}/{e.estado}"} for e in enderecos])
+    return jsonify([{'id': e.id, 'text': f"{e.logradouro}, {e.numero}{f' - {e.complemento}' if e.complemento else ''} - {e.cidade}/{e.estado}"} for e in enderecos])

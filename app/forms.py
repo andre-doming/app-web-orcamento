@@ -40,6 +40,7 @@ class ContatoClienteForm(FlaskForm):
 class EnderecoClienteForm(FlaskForm):
     logradouro = StringField('Logradouro', validators=[DataRequired(), Length(max=200)])
     numero = StringField('Número', validators=[DataRequired(), Length(max=10)])
+    complemento = StringField('Complemento', validators=[Length(max=100)])
     bairro = StringField('Bairro', validators=[DataRequired(), Length(max=100)])
     cidade = StringField('Cidade', validators=[DataRequired(), Length(max=100)])
     estado = StringField('Estado (UF)', validators=[DataRequired(), Length(min=2, max=2)])

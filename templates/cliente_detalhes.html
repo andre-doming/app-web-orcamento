@@ -34,9 +34,13 @@
                         {% for contato in cliente.contatos %}
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             {{ contato.tipo|title }}: {{ contato.valor }}
-                            {% if contato.principal %}
-                                <span class="badge bg-primary">Principal</span>
-                            {% endif %}
+                            <div>
+                                {% if contato.principal %}
+                                    <span class="badge bg-primary me-2">Principal</span>
+                                {% endif %}
+                                <a href="{{ url_for('main.contato_cliente_editar', id=contato.id) }}" class="btn btn-sm btn-warning me-1">Editar</a>
+                                <a href="{{ url_for('main.contato_cliente_deletar', id=contato.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza que deseja deletar este contato?')">Deletar</a>
+                            </div>
                         </li>
                         {% endfor %}
                     </ul>
@@ -62,9 +66,13 @@
                         <div class="col-md-6 mb-3">
                             <div class="card">
                                 <div class="card-body">
-                                    <p>{{ endereco.logradouro }}, {{ endereco.numero }}</p>
+                                    <p>{{ endereco.logradouro }}, {{ endereco.numero }}{% if endereco.complemento %} - {{ endereco.complemento }}{% endif %}</p>
                                     <p>{{ endereco.bairro }}, {{ endereco.cidade }}/{{ endereco.estado }}</p>
                                     <p>CEP: {{ endereco.cep }}</p>
+                                    <div class="mt-2">
+                                        <a href="{{ url_for('main.endereco_cliente_editar', id=endereco.id) }}" class="btn btn-sm btn-warning me-1">Editar</a>
+                                        <a href="{{ url_for('main.endereco_cliente_deletar', id=endereco.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza que deseja deletar este endereço?')">Deletar</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>

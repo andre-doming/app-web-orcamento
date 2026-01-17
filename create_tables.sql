@@ -28,6 +28,7 @@ CREATE TABLE enderecos_cliente (
     cliente_id INTEGER NOT NULL REFERENCES clientes(id),
     logradouro VARCHAR(200) NOT NULL,
     numero VARCHAR(10) NOT NULL,
+    complemento VARCHAR(100),
     bairro VARCHAR(100) NOT NULL,
     cidade VARCHAR(100) NOT NULL,
     estado VARCHAR(2) NOT NULL,

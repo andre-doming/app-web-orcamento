@@ -37,6 +37,7 @@ class EnderecoCliente(db.Model):
     cliente_id = db.Column(db.Integer, db.ForeignKey('clientes.id'), nullable=False)
     logradouro = db.Column(db.String(200), nullable=False)
     numero = db.Column(db.String(10), nullable=False)
+    complemento = db.Column(db.String(100))
     bairro = db.Column(db.String(100), nullable=False)
     cidade = db.Column(db.String(100), nullable=False)
     estado = db.Column(db.String(2), nullable=False)
