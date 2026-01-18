@@ -4,7 +4,7 @@ CREATE TABLE usuarios (
     id SERIAL PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     email VARCHAR(120) UNIQUE NOT NULL,
-    senha_hash VARCHAR(128) NOT NULL,
+    senha_hash VARCHAR(255) NOT NULL,
     ativo BOOLEAN DEFAULT TRUE
 );
 
