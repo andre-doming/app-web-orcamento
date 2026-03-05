@@ -9,22 +9,19 @@ from app import create_app, db
 from app.models import Usuario
 from werkzeug.security import generate_password_hash
 import os
-
-app = create_app()
-
-# garante registro dos models
 import app.models
 
-with app.app_context():
-    print("Criando tabelas...")
+# cria o Flask app corretamente
+flask_app = create_app()
 
+# cria tabelas e admin
+with flask_app.app_context():
     db.create_all()
 
     admin_email = os.environ.get("ADMIN_EMAIL", "admin@example.com")
     admin_password = os.environ.get("ADMIN_PASSWORD", "admin123")
 
     if not Usuario.query.filter_by(email=admin_email).first():
-
         admin = Usuario(
             nome="Admin",
             email=admin_email,
@@ -39,3 +36,6 @@ with app.app_context():
 
     else:
         print("Usuario admin ja existe")
+
+# variável que o gunicorn usa
+app = flask_app
