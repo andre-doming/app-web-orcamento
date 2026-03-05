@@ -11,7 +11,7 @@ bp = Blueprint('main', __name__)
 @bp.route('/')
 @login_required
 def index():
-    return render_template('index.html', app_nome='OrçaWeb', empresa_nome='Sua Empresa', logo_url='')
+    return render_template('index.html', app_nome='OrçaWeb', empresa_nome='Dedé Softwares', logo_url='/static/logo.png')
 
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
@@ -24,7 +24,7 @@ def login():
             login_user(usuario)
             return redirect(url_for('main.index'))
         flash('Credenciais inválidas.')
-    return render_template('login.html', form=form, app_nome='OrçaWeb', empresa_nome='Sua Empresa', logo_url='')
+    return render_template('login.html', form=form, app_nome='OrçaWeb', empresa_nome='Dedé Softwares', logo_url='/static/logo.png')
 
 @bp.route('/logout')
 @login_required
